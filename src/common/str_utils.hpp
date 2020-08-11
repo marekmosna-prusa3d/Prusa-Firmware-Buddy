@@ -60,6 +60,33 @@ private:
     mutable size_t index_;
 };
 
+using word_buffer = std::array<std::uint32_t, 32>;
+extern word_buffer ram_word_buffer;
+
+struct ram_buffer {
+    using value_type = word_buffer::value_type;
+
+    ram_buffer() {
+        p_word_buffer_ = &ram_word_buffer;
+    };
+
+    value_type &operator[](size_t index) {
+        return (*p_word_buffer_)[index];
+    };
+
+private:
+    word_buffer *p_word_buffer_;
+};
+
+struct no_wrap {
+    using value_type = std::uint32_t;
+
+    template <typename source>
+    value_type character(source &s) {
+        return s.getUtf8Char();
+    }
+};
+
 template <
     typename memory_buffer,
     typename font_type>
@@ -106,7 +133,7 @@ private:
         std::uint8_t i = 0;
         std::uint16_t word_width = 0;
         value_type c = 0;
-        while ((c = s.get()) != static_cast<value_type>(CHAR_SPACE)) {
+        while ((c = s.getUtf8Char()) != static_cast<value_type>(CHAR_SPACE)) {
             word_width += width::value(font_);
             if (c == static_cast<value_type>(CHAR_NBSP)) {
                 buffer_[i++] = static_cast<value_type>(CHAR_SPACE);

@@ -1,6 +1,8 @@
 #include "str_utils.hpp"
 #include <string.h>
 
+word_buffer ram_word_buffer;
+
 template <typename T>
 size_t strlenT(const T *s) {
     size_t i;
