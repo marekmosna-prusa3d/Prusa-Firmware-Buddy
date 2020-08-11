@@ -5,8 +5,7 @@
 1. In Visual Studio Code, install the following extensions:
     - `CMake Tools` (handles configuring and building the project),
     - `Cortex-Debug` and `Cortex-Debug: Device Support Pack - STM32F4` (support for debugging of the firmware),
-    - `ccls` extension, which provides autocompletion and code navigation.
-    - `Code Spell Checker` (streetsidesoftware.code-spell-checker) extension, which provides spell checking and correction suggestions.
+    - and `ccls` extension, which provides autocompletion and code navigation.
 2. Install [ccls](https://github.com/MaskRay/ccls) on your system
     - Linux: `sudo snap install ccls --classic` ([full instructions](https://snapcraft.io/ccls))
         - Also, check out this: https://github.com/MaskRay/ccls/wiki/FAQ#maximum-number-of-file-descriptors
