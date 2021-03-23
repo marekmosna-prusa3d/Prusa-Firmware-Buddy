@@ -14,15 +14,10 @@
 #include "eeprom.h"
 #include "string.h"
 #include <stdbool.h>
-#include <time.h>
-#include "main.h"
-#include "stm32f4xx_hal.h"
 
 // static const uint16_t MAX_UINT16 = 65535;
 static const uint32_t PRINTER_TYPE_ADDR = 0x0802002F;    // 1 B
 static const uint32_t PRINTER_VERSION_ADDR = 0x08020030; // 1 B
-
-static bool sntp_time_init = false;
 
 uint32_t load_ini_file(ETH_config_t *config) {
     return ini_load_file(config);
@@ -105,19 +100,6 @@ void parse_MAC_address(mac_address_t *dest) {
         *mac_ptr, *(mac_ptr + 1), *(mac_ptr + 2), *(mac_ptr + 3), *(mac_ptr + 4), *(mac_ptr + 5));
 }
 
-void stringify_eth_for_ini(ini_file_str_t *dest, ETH_config_t *config) {
-    char addr[IP4_ADDR_STR_SIZE], msk[IP4_ADDR_STR_SIZE], gw[IP4_ADDR_STR_SIZE];
-
-    ip4addr_ntoa_r(&(config->lan.addr_ip4), addr, IP4_ADDR_STR_SIZE);
-    ip4addr_ntoa_r(&(config->lan.msk_ip4), msk, IP4_ADDR_STR_SIZE);
-    ip4addr_ntoa_r(&(config->lan.gw_ip4), gw, IP4_ADDR_STR_SIZE);
-
-    snprintf(*dest, MAX_INI_SIZE,
-        "[lan_ip4]\ntype=%s\nhostname=%s\naddress=%s\nmask=%s\ngateway=%s\n",
-        IS_LAN_STATIC(config->lan.flag) ? "STATIC" : "DHCP", config->hostname,
-        addr, msk, gw);
-}
-
 void stringify_eth_for_screen(lan_descp_str_t *dest, ETH_config_t *config) {
     char addr[IP4_ADDR_STR_SIZE], msk[IP4_ADDR_STR_SIZE], gw[IP4_ADDR_STR_SIZE];
     mac_address_t mac;
@@ -134,66 +116,4 @@ void stringify_eth_for_screen(lan_descp_str_t *dest, ETH_config_t *config) {
     } else {
         snprintf(*dest, LAN_DESCP_SIZE, "NO CONNECTION\n\nMAC Address:\n%s", mac);
     }
-}
-
-time_t sntp_get_system_time(void) {
-
-    if (sntp_time_init) {
-        RTC_TimeTypeDef currTime;
-        RTC_DateTypeDef currDate;
-        HAL_RTC_GetTime(&hrtc, &currTime, RTC_FORMAT_BIN);
-        HAL_RTC_GetDate(&hrtc, &currDate, RTC_FORMAT_BIN);
-        time_t secs;
-        struct tm system_time;
-        system_time.tm_isdst = -1; // Is DST on? 1 = yes, 0 = no, -1 = unknown
-        system_time.tm_hour = currTime.Hours;
-        system_time.tm_min = currTime.Minutes;
-        system_time.tm_sec = currTime.Seconds;
-        system_time.tm_mday = currDate.Date;
-        system_time.tm_mon = currDate.Month;
-        system_time.tm_year = currDate.Year;
-        system_time.tm_wday = currDate.WeekDay;
-        secs = mktime(&system_time);
-        return secs;
-    } else {
-        return 0;
-    }
-}
-
-void sntp_set_system_time(uint32_t sec, int8_t last_timezone) {
-    ETH_config_t config = {};
-    config.var_mask = ETHVAR_MSK(ETHVAR_TIMEZONE);
-    load_eth_params(&config);
-
-    RTC_TimeTypeDef currTime;
-    RTC_DateTypeDef currDate;
-
-    struct tm current_time_val;
-    int8_t diff = config.timezone - last_timezone;
-    time_t current_time = (time_t)sec + (diff * 3600);
-
-    localtime_r(&current_time, &current_time_val);
-
-    currTime.Seconds = current_time_val.tm_sec;
-    currTime.Minutes = current_time_val.tm_min;
-    currTime.Hours = current_time_val.tm_hour;
-    currDate.Date = current_time_val.tm_mday;
-    currDate.Month = current_time_val.tm_mon;
-    currDate.Year = current_time_val.tm_year;
-    currDate.WeekDay = current_time_val.tm_wday;
-
-    HAL_RTC_SetTime(&hrtc, &currTime, RTC_FORMAT_BIN);
-    HAL_RTC_SetDate(&hrtc, &currDate, RTC_FORMAT_BIN);
-
-    sntp_time_init = true;
-}
-
-void add_time_to_timestamp(int32_t secs_to_add, struct tm *timestamp) {
-
-    if (secs_to_add == 0) {
-        return;
-    }
-    time_t secs_from_epoch_start = mktime(timestamp);
-    time_t current_time = secs_from_epoch_start + secs_to_add;
-    localtime_r(&current_time, timestamp);
 }

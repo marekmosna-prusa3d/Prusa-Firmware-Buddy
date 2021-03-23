@@ -61,7 +61,6 @@
 /* Within 'USER CODE' section, code will be kept by default at each generation */
 /* USER CODE BEGIN 0 */
 #include "lwip/netifapi.h"
-#include "wui_api.h"
 #include "otp.h"
 #include <stdbool.h>
 /* USER CODE END 0 */

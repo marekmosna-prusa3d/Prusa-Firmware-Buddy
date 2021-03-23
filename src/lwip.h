@@ -78,9 +78,7 @@ extern "C" {
 /* chip specific includes ----------------------------------------------------*/
 #include "stm32f4xx_hal.h"
 /* lwip customization includes -----------------------------------------------*/
-
-#include "httpd.h"
-#include "wui_api.h"
+#include "netif_settings.h"
 /* Global Variables ---------------------------------------------------------*/
 
 #define DNS_1 0
@@ -127,16 +125,6 @@ void wui_lwip_sync_gui_lan_settings();
 void MX_LWIP_Init(ETH_config_t *ethconfig);
 
 /* MINI LwIP interface functions --------------------------------------------*/
-
-/*!****************************************************************************
-* \brief Interface function for initializing HTTP server.
-*
-* \param    void
-*
-* \return	void
-*
-*****************************************************************************/
-void http_server_init(void);
 
 #ifdef __cplusplus
 }

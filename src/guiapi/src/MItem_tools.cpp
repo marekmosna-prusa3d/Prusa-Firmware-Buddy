@@ -9,7 +9,6 @@
 #include "window_dlg_calib_z.hpp"
 #include "window_file_list.hpp"
 #include "sound.hpp"
-#include "wui_api.h"
 #include "i18n.h"
 #include "ScreenHandler.hpp"
 #include "screen_wizard.hpp"
@@ -23,6 +22,7 @@
 #include "hwio_pindef.h"
 #include "menu_spin_config.hpp"
 #include "DialogSelftestResult.hpp"
+#include "rtc_time.h"
 
 /*****************************************************************************/
 //MI_WIZARD
@@ -419,8 +419,8 @@ void MI_TIMEZONE::OnClick() {
     int8_t last_timezone = variant8_get_i8(eeprom_get_var(EEVAR_TIMEZONE));
     eeprom_set_var(EEVAR_TIMEZONE, variant8_i8(timezone));
     time_t seconds = 0;
-    if ((seconds = sntp_get_system_time())) {
-        sntp_set_system_time(seconds, last_timezone);
+    if ((seconds = get_system_time())) {
+        set_system_time(seconds, last_timezone);
     }
 }
 

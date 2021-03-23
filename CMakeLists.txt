@@ -429,6 +429,7 @@ endif()
 target_include_directories(
   firmware
   PRIVATE include
+          src
           src/common
           src/common/include
           src/gui
@@ -478,6 +479,10 @@ target_sources(
           src/stm32f4xx_hal_msp.c
           src/stm32f4xx_it.c
           src/fatfs.c
+          src/rtc_time.c
+          src/ethernetif.c
+          src/netif_settings.c
+          src/lwip.c
           src/usb_host.c
           src/usbh_conf.c
           src/usbd_conf.c

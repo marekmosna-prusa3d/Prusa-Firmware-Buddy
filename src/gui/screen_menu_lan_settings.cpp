@@ -19,6 +19,19 @@
 #include "i18n.h"
 #include "ScreenHandler.hpp"
 
+static void stringify_eth_for_ini(ini_file_str_t *dest, ETH_config_t *config) {
+    char addr[IP4_ADDR_STR_SIZE], msk[IP4_ADDR_STR_SIZE], gw[IP4_ADDR_STR_SIZE];
+
+    ip4addr_ntoa_r(&(config->lan.addr_ip4), addr, IP4_ADDR_STR_SIZE);
+    ip4addr_ntoa_r(&(config->lan.msk_ip4), msk, IP4_ADDR_STR_SIZE);
+    ip4addr_ntoa_r(&(config->lan.gw_ip4), gw, IP4_ADDR_STR_SIZE);
+
+    snprintf(*dest, MAX_INI_SIZE,
+        "[lan_ip4]\ntype=%s\nhostname=%s\naddress=%s\nmask=%s\ngateway=%s\n",
+        IS_LAN_STATIC(config->lan.flag) ? "STATIC" : "DHCP", config->hostname,
+        addr, msk, gw);
+}
+
 /*****************************************************************************/
 //Eth static class used by menu and its items
 //And NO David a do not want to use singleton here

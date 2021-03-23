@@ -22,30 +22,9 @@
 #define MAX_INI_SIZE      200 // length of ini file string
 #define LAN_DESCP_SIZE    150 // length of lan description string with screen format
 
-#define ETHVAR_MSK(n_id) ((uint32_t)1 << (n_id))
-#define ETHVAR_STATIC_LAN_ADDRS \
-    (ETHVAR_MSK(ETHVAR_LAN_ADDR_IP4) | ETHVAR_MSK(ETHVAR_LAN_MSK_IP4) | ETHVAR_MSK(ETHVAR_LAN_GW_IP4))
-
-#define ETHVAR_STATIC_DNS_ADDRS \
-    (ETHVAR_MSK(ETHVAR_DNS1_IP4) | ETHVAR_MSK(ETHVAR_DNS2_IP4))
-
-#define ETHVAR_EEPROM_CONFIG \
-    (ETHVAR_STATIC_LAN_ADDRS | ETHVAR_MSK(ETHVAR_LAN_FLAGS) | ETHVAR_MSK(ETHVAR_HOSTNAME) | ETHVAR_MSK(ETHVAR_DNS1_IP4) | ETHVAR_MSK(ETHVAR_DNS2_IP4))
-
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-typedef enum {
-    ETHVAR_LAN_FLAGS,    // uint8_t, lan.flag
-    ETHVAR_HOSTNAME,     // char[20 + 1], hostname
-    ETHVAR_LAN_ADDR_IP4, // ip4_addr_t, lan.addr_ip4
-    ETHVAR_LAN_MSK_IP4,  // ip4_addr_t, lan.msk_ip4
-    ETHVAR_LAN_GW_IP4,   // ip4_addr_t, lan.gw_ip4
-    ETHVAR_TIMEZONE,     // int8_t, timezone
-    ETHVAR_DNS1_IP4,     // ip_addr_t, dns1_ip4
-    ETHVAR_DNS2_IP4,     // ip_addr_t, dns2_ip4
-} ETHVAR_t;
 
 typedef char mac_address_t[MAC_ADDR_STR_LEN];
 typedef char ini_file_str_t[MAX_INI_SIZE];
@@ -124,13 +103,6 @@ void get_printer_info(printer_info_t *printer_info);
 ******************************************************************************/
 void parse_MAC_address(mac_address_t *dest);
 
-/*!*****************************************************************************************
-* \brief Parses all vital eth information in destination string according to ini file format
-*
-* \param [out] destination null-terminated string
-* \param [in] config - storage for ethernet configurations
-*******************************************************************************************/
-void stringify_eth_for_ini(ini_file_str_t *dest, ETH_config_t *config);
 /*!*****************************************************************************************
 * \brief Parses all vital eth information in destination string according to screen format
 *

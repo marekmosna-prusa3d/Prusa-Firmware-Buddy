@@ -64,7 +64,8 @@
 #include <string.h>
 #include "dbg.h"
 #include "ethernetif.h"
-#include "wui_api.h"
+#include "netif_settings.h"
+
 // global variables
 WUI_ETH_LINK_STATUS_t link_status = WUI_ETH_LINK_DOWN;
 WUI_ETH_NETIF_STATUS_t netif_status = WUI_ETH_NETIF_DOWN;
@@ -205,10 +206,4 @@ void MX_LWIP_Init(ETH_config_t *ethconfig) {
         /* When the netif link is down this function must be called */
         netif_set_down(&eth0);
     }
-}
-
-/* MINI LwIP interface functions --------------------------------------------*/
-
-void http_server_init(void) {
-    httpd_init();
 }

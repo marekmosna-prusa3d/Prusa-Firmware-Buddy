@@ -13,6 +13,7 @@
 #include "../Middlewares/ST/Utilites/CPU/cpu_utils.h"
 #include "i18n.h"
 #include "marlin_client.h"
+#include "rtc_time.h"
 
 /******************************************************************************************************/
 //variables
@@ -38,7 +39,9 @@ screen_sysinfo_data_t::screen_sysinfo_data_t()
     , textMenuName(this, Rect16(0, 0, display::GetW(), 22), is_multiline::no)
     , textCPU_load(this, Rect16(col_0, 25, col_0_w, row_h), is_multiline::no)
     , textCPU_load_val(this, Rect16(col_1, 25, col_1_w, row_h))
+#ifdef DEBUG_NTP
     , textDateTime(this, Rect16(0, 50, display::GetW(), row_h), is_multiline::no)
+#endif
     , textFan0_RPM(this, Rect16(col_0, 75, col_0_w, row_h), is_multiline::no)
     , textFan0_RPM_val(this, Rect16(col_1, 75, col_1_w, row_h))
     , textFan1_RPM(this, Rect16(col_0, 100, col_0_w, row_h), is_multiline::no)
@@ -58,7 +61,7 @@ screen_sysinfo_data_t::screen_sysinfo_data_t()
     textCPU_load_val.SetValue(osGetCPUUsage());
 
 #ifdef DEBUG_NTP
-    time_t sec = sntp_get_system_time();
+    time_t sec = get_system_time();
     struct tm now;
     localtime_r(&sec, &now);
     static char buff[40];

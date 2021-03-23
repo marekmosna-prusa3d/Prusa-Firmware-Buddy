@@ -2,7 +2,6 @@
 #include "netif.h"
 #include "dhcp.h"
 #include "dns.h"
-#include "wui_api.h"
 #include "lwip.h"
 
 static uint32_t wui_eth_config_update = 0;
