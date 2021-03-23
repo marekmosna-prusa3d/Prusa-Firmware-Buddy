@@ -65,6 +65,7 @@
 #include "dbg.h"
 #include "ethernetif.h"
 #include "netif_settings.h"
+#include "wui_api.h"
 
 // global variables
 WUI_ETH_LINK_STATUS_t link_status = WUI_ETH_LINK_DOWN;

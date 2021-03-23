@@ -39,6 +39,7 @@
 
 #include "lwip/opt.h"
 #include "lwip/prot/iana.h"
+#include "rtc_time.h"
 
 /**
  * @defgroup sntp_opts Options
@@ -53,7 +54,7 @@
  * NTP timestamps instead.
  */
 #if !defined SNTP_SET_SYSTEM_TIME || defined __DOXYGEN__
-    #define SNTP_SET_SYSTEM_TIME(sec) sntp_set_system_time(sec, 0)
+    #define SNTP_SET_SYSTEM_TIME(sec) set_system_time(sec, 0)
 #endif
 
 /** The maximum number of SNTP servers that can be set */

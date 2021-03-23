@@ -15,6 +15,7 @@
 #include <string.h>
 #include "sntp_client.h"
 #include "dbg.h"
+#include "httpd.h"
 
 #define WUI_NETIF_SETUP_DELAY  1000
 #define WUI_COMMAND_QUEUE_SIZE WUI_WUI_MQ_CNT // maximal number of messages at once in WUI command messageQ

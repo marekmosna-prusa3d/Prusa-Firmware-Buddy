@@ -118,24 +118,6 @@ void stringify_eth_for_screen(lan_descp_str_t *dest, ETH_config_t *config);
 *****************************************************************************/
 void get_eth_address(ETH_config_t *config);
 
-/*!*********************************************************************************************************************
-* \brief Parses time from device's time storage to seconds. MONTHS are from 0 and YEARS are from 1900
-*
-* \retval number of seconds since epoch start (1.0.1900), if time is initialized by sntp
-*
-* \retval 0 if RTC time have not been initialized
-***********************************************************************************************************************/
-time_t sntp_get_system_time(void);
-
-/*!**********************************************************************************************************
-* \brief Sets time and date in device's RTC on some other time storage
-*
-* \param [in] sec - number of seconds from 1.1.1900
-*
-* \param [in] last_timezone - to calculate difference between timezones we need to pass last saved timezone
-************************************************************************************************************/
-void sntp_set_system_time(uint32_t sec, int8_t last_timezone);
-
 /*!********************************************************************************
 * \brief Adds time in seconds to given timestamp
 *
