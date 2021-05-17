@@ -1,29 +1,43 @@
 add_library(WUI INTERFACE)
 
-target_sources(WUI INTERFACE
-  wui.c
-  wui_REST_api.c
-  http/altcp_proxyconnect.c
-  http/fs.c
-  http/httpd.c
-  http/httpd_parser.c
-  lwip.c
-  ethernetif.c
-  netif_settings.c
-  sntp/sntp_client.c
-  sntp/sntp.c
-)
+target_sources(
+  WUI
+  INTERFACE wui.c
+            wui_REST_api.c
+            http/altcp_proxyconnect.c
+            http/fs.c
+            http/httpd.c
+            http/httpd_parser.c
+            lwip.c
+            ethernetif.c
+            netif_settings.c
+            sntp/sntp_client.c
+            sntp/sntp.c
+  )
+
+target_include_directories(WUI INTERFACE ${CMAKE_CURRENT_LIST_DIR} http sntp resources)
+
+set(WEB_FILE "fsdata_wui_local.c")
+
+file(GLOB WEB_FILES ${PROJECT_ROOT_DIR}/lib/WUI/resources/src_local/*.*)
+add_custom_target(
+  wui-genfile
+  DEPENDS ${WEB_FILES}
+  COMMAND
+    ${Python3_EXECUTABLE} ${PROJECT_ROOT_DIR}/utils/wui.py --input-folder
+    ${CMAKE_SOURCE_DIR}/lib/WUI/resources/src_local --output-folder ${CMAKE_BINARY_DIR} ${WEB_FILE}
+  COMMENT "Generating fsdata_wui_local raw data from WUI resources." USES_TERMINAL
+  )
+
+add_dependencies(WUI wui-genfile)
 
 target_include_directories(
   WUI
   INTERFACE
-    ${CMAKE_CURRENT_LIST_DIR}
-    http
-    sntp
-    resources
-)
-
-target_link_libraries(
-  WUI
-  INTERFACE LwIP
+  INTERFACE ${CMAKE_SOURCE_DIR}/lib/WUI ${CMAKE_SOURCE_DIR}/lib/WUI/http
+            ${CMAKE_SOURCE_DIR}/lib/WUI/sntp ${CMAKE_SOURCE_DIR}/lib/WUI/resources
+            ${CMAKE_BINARY_DIR}
   )
+
+target_compile_definitions(WUI INTERFACE HTTPD_FSDATA_FILE="${WEB_FILE}")
+target_link_libraries(WUI INTERFACE LwIP)
