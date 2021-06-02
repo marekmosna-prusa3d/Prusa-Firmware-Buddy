@@ -2648,7 +2648,7 @@ static struct fs_file *wui_api_main(const char *uri) {
     api_file.index = 0;
     api_file.pextension = NULL;
     api_file.flags = 0; // no flags for fs_open
-    char *t_string = "/api/telemetry";
+    char *t_string = "/api/printer";
     uint32_t t_string_len = strlen(t_string);
     memset(response_body_buf, 0, RESPONSE_BODY_SIZE);
     if (!strncmp(uri, t_string, t_string_len) && (strlen(uri) == t_string_len)) {
