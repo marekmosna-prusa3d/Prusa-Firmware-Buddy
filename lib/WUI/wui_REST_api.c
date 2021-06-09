@@ -152,11 +152,39 @@ void get_version(char *data, const uint32_t buf_len) {
 }
 
 void get_job(char *data, const uint32_t buf_len) {
+
+    osStatus status = osMutexWait(wui_thread_mutex_id, osWaitForever);
+    if (status == osOK) {
+        wui_vars_copy = wui_vars;
+    }
+    osMutexRelease(wui_thread_mutex_id);
+
     snprintf(data, buf_len,
         "{"
-        "\"api\": \"0.1\","
-        "\"server\": \"2.0.0\","
-        "\"text\": \"Prusa Local MINI 2.0.0\","
-        "\"hostname\": \"prusa-mini\""
-        "}");
+        "\"job\":{"
+        "\"estimatedPrintTime\":%ld,"
+        "\"file\":{"
+        "\"date\":null,"
+        "\"name\":%s,"
+        "\"origin\":\"USB\","
+        "\"path\":%s,"
+        "\"size\":%ld"
+        "}"
+        "},"
+        "\"state\":\"Printing\","
+        "\"progress\":{"
+        "\"completion\":0.06666666666666667,"
+        "\"filepos\":629439.0666666667,"
+        "\"printTime\":8,"
+        "\"printTimeLeft\":112,"
+        "\"pos_z_mm\":3.3333333333333335,"
+        "\"printSpeed\":5.019598656078543,"
+        "\"flow_factor\":2.2267336678608296,"
+        "\"filament_status\":3"
+        "},"
+        "\"filament\":{"
+        "\"length\":3,"
+        "\"volume\":5.333333333333333"
+        "}"
+        "}", );
 }
