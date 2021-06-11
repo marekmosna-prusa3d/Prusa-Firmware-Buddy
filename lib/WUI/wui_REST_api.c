@@ -57,8 +57,10 @@ void get_printer(char *data, const uint32_t buf_len) {
 
     switch (wui_vars_copy.print_state) {
     case mpsPrinting:
-        printing = busy = 1;
-        ready = operational = 0;
+        if (wui_vars_copy.time_to_end && wui_vars_copy.time_to_end != (-1UL)) {
+            printing = busy = 1;
+            ready = operational = 0;
+        }
         break;
     case mpsPausing_Begin:
     case mpsPausing_WaitIdle:
@@ -165,26 +167,30 @@ void get_job(char *data, const uint32_t buf_len) {
         "\"estimatedPrintTime\":%ld,"
         "\"file\":{"
         "\"date\":null,"
-        "\"name\":%s,"
+        "\"name\":\"%s\","
         "\"origin\":\"USB\","
-        "\"path\":%s,"
+        "\"path\":\"%s\","
         "\"size\":%ld"
         "}"
         "},"
         "\"state\":\"Printing\","
         "\"progress\":{"
-        "\"completion\":0.06666666666666667,"
-        "\"filepos\":629439.0666666667,"
-        "\"printTime\":8,"
-        "\"printTimeLeft\":112,"
-        "\"pos_z_mm\":3.3333333333333335,"
-        "\"printSpeed\":5.019598656078543,"
-        "\"flow_factor\":2.2267336678608296,"
+        "\"completion\":%d.%.2d,"
+        "\"filepos\":%ld,"
+        "\"printTime\":%ld,"
+        "\"printTimeLeft\":%ld,"
+        "\"pos_z_mm\":%d.%.3d,"
+        "\"printSpeed\":%d,"
+        "\"flow_factor\":%d,"
         "\"filament_status\":3"
         "},"
         "\"filament\":{"
         "\"length\":3,"
         "\"volume\":5.333333333333333"
         "}"
-        "}", );
+        "}",
+        wui_vars_copy.time_to_end, wui_vars_copy.gcode_name, wui_vars_copy.gcode_name, 0UL,
+        0, 0, 0UL, wui_vars_copy.print_dur, wui_vars_copy.time_to_end,
+        (int)wui_vars_copy.pos[Z_AXIS_POS], (int)((wui_vars_copy.pos[Z_AXIS_POS] - (int)wui_vars_copy.pos[Z_AXIS_POS]) * 1000),
+        wui_vars_copy.print_speed, wui_vars_copy.flow_factor);
 }
