@@ -651,6 +651,7 @@ if(GUI)
             src/gui/screen_menu_hw_setup.cpp
             src/gui/screen_menu_steel_sheets.cpp
             src/gui/screen_menu_footer_settings.cpp
+            src/gui/screen_menu_prusa_link.cpp
             src/gui/screen_sheet_rename.cpp
             src/gui/test/screen_test.cpp
             src/gui/test/screen_test_disp_mem.cpp

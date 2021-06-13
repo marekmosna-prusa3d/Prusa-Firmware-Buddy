@@ -190,7 +190,7 @@ void get_job(char *data, const uint32_t buf_len) {
         "}"
         "}",
         wui_vars_copy.time_to_end, wui_vars_copy.gcode_name, wui_vars_copy.gcode_name, 0UL,
-        0, 0, 0UL, wui_vars_copy.print_dur, wui_vars_copy.time_to_end,
+        (int)(wui_vars_copy.sd_precent_done == 100), (int)(wui_vars_copy.sd_precent_done % 100), 0UL, wui_vars_copy.print_dur, wui_vars_copy.time_to_end,
         (int)wui_vars_copy.pos[Z_AXIS_POS], (int)((wui_vars_copy.pos[Z_AXIS_POS] - (int)wui_vars_copy.pos[Z_AXIS_POS]) * 1000),
         wui_vars_copy.print_speed, wui_vars_copy.flow_factor);
 }

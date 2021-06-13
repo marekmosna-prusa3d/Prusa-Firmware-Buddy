@@ -209,3 +209,13 @@ MI_FOOTER_SETTINGS::MI_FOOTER_SETTINGS()
 void MI_FOOTER_SETTINGS::click(IWindowMenu & /*window_menu*/) {
     Screens::Access()->Open(GetScreenMenuFooterSettings);
 }
+
+/*****************************************************************************/
+//MI_PRUSA_LINK
+MI_PRUSA_LINK::MI_PRUSA_LINK()
+    : WI_LABEL_t(_(label), 0, is_enabled_t::yes, is_hidden_t::no) {
+}
+
+void MI_PRUSA_LINK::click(IWindowMenu & /*window_menu*/) {
+    Screens::Access()->Open(GetScreenPrusaLink);
+}

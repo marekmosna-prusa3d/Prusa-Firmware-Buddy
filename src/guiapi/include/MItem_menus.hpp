@@ -205,3 +205,13 @@ public:
 protected:
     virtual void click(IWindowMenu &window_menu) override;
 };
+
+class MI_PRUSA_LINK : public WI_LABEL_t {
+    static constexpr const char *const label = N_("Prusa Link");
+
+public:
+    MI_PRUSA_LINK();
+
+protected:
+    virtual void click(IWindowMenu &window_menu) override;
+};
