@@ -15,6 +15,7 @@
 #include <string.h>
 #include "sntp_client.h"
 #include "dbg.h"
+#include "lwip/altcp_tcp.h"
 
 #define WUI_NETIF_SETUP_DELAY  1000
 #define WUI_COMMAND_QUEUE_SIZE WUI_WUI_MQ_CNT // maximal number of messages at once in WUI command messageQ
@@ -98,4 +99,11 @@ void StartWebServerTask(void const *argument) {
 
 const char *wui_get_api_key() {
     return api_key;
+}
+
+struct altcp_pcb* prusa_alloc(void *arg, uint8_t ip_type) {
+    if (netif_status == WUI_ETH_NETIF_UP)
+        return altcp_tcp_new_ip_type(ip_type);
+    else
+        return NULL;
 }

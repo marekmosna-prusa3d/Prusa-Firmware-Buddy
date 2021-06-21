@@ -10,6 +10,8 @@ target_sources(LwIP INTERFACE
   src/api/tcpip.c
   src/core/def.c
   src/core/dns.c
+  src/core/altcp.c
+  src/core/altcp_tcp.c
   src/core/inet_chksum.c
   src/core/init.c
   src/core/ip.c
