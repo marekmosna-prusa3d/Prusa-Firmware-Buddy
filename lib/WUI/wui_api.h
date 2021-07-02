@@ -20,7 +20,7 @@
 #define PRI_STATE_STR_LEN 10  // length of printer state string
 #define IP4_ADDR_STR_SIZE 16  // length of ip4 address string ((0-255).(0-255).(0-255).(0-255))
 #define MAX_INI_SIZE      200 // length of ini file string
-#define LAN_DESCP_SIZE    150 // length of lan description string with screen format
+#define LAN_DESCP_SIZE    256 // length of lan description string with screen format
 
 #define ETHVAR_MSK(n_id) ((uint32_t)1 << (n_id))
 #define ETHVAR_STATIC_LAN_ADDRS \
@@ -45,6 +45,8 @@ typedef enum {
     ETHVAR_TIMEZONE,     // int8_t, timezone
     ETHVAR_DNS1_IP4,     // ip_addr_t, dns1_ip4
     ETHVAR_DNS2_IP4,     // ip_addr_t, dns2_ip4
+    ETHVAR_SSID,
+    ETHVAR_PSK_PASSWORD
 } ETHVAR_t;
 
 typedef char mac_address_t[MAC_ADDR_STR_LEN];
@@ -131,6 +133,15 @@ void parse_MAC_address(mac_address_t *dest);
 * \param [in] config - storage for ethernet configurations
 *******************************************************************************************/
 void stringify_eth_for_ini(ini_file_str_t *dest, ETH_config_t *config);
+
+/*!*****************************************************************************************
+* \brief Parses all vital wifi information in destination string according to ini file format
+*
+* \param [out] destination null-terminated string
+* \param [in] config - storage for ethernet configurations
+*******************************************************************************************/
+void stringify_wifi_for_ini(ini_file_str_t *dest, ETH_config_t *config);
+
 /*!*****************************************************************************************
 * \brief Parses all vital eth information in destination string according to screen format
 *
@@ -138,6 +149,14 @@ void stringify_eth_for_ini(ini_file_str_t *dest, ETH_config_t *config);
 * \param [in] config - storage for ethernet configurations
 *******************************************************************************************/
 void stringify_eth_for_screen(lan_descp_str_t *dest, ETH_config_t *config);
+
+/*!*****************************************************************************************
+* \brief Parses all vital wifi information in destination string according to screen format
+*
+* \param [out] destination null-terminated string
+* \param [in] config - storage for ethernet configurations
+*******************************************************************************************/
+void stringify_wifi_for_screen(lan_descp_str_t *dest, ETH_config_t *config);
 
 /*!***************************************************************************
 * \brief Returns the ethernet addresses

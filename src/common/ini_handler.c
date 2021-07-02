@@ -41,6 +41,12 @@ static int ini_handler_func(void *user, const char *section, const char *name, c
         if (ip4addr_aton(value, &tmp_config->lan.gw_ip4)) {
             tmp_config->var_mask |= ETHVAR_MSK(ETHVAR_LAN_GW_IP4);
         }
+    } else if (ini_string_match(section, "wifi_ap", name, "ssid")) {
+        strlcpy(tmp_config->ssid, value, SSID_LEN + 1);
+        tmp_config->var_mask |= ETHVAR_MSK(ETHVAR_SSID);
+    } else if (ini_string_match(section, "wifi_ap", name, "passwd")) {
+        strlcpy(tmp_config->pks_password, value, PSK_PASSWD_LEN + 1);
+        tmp_config->var_mask |= ETHVAR_MSK(ETHVAR_PSK_PASSWORD);
     } else {
         return 0; /* unknown section/name, error */
     }

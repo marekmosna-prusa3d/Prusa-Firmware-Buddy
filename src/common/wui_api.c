@@ -106,16 +106,42 @@ void parse_MAC_address(mac_address_t *dest) {
 }
 
 void stringify_eth_for_ini(ini_file_str_t *dest, ETH_config_t *config) {
-    char addr[IP4_ADDR_STR_SIZE], msk[IP4_ADDR_STR_SIZE], gw[IP4_ADDR_STR_SIZE];
+    if (IS_LAN_STATIC(config->lan.flag)) {
+        char addr[IP4_ADDR_STR_SIZE], msk[IP4_ADDR_STR_SIZE], gw[IP4_ADDR_STR_SIZE];
 
-    ip4addr_ntoa_r(&(config->lan.addr_ip4), addr, IP4_ADDR_STR_SIZE);
-    ip4addr_ntoa_r(&(config->lan.msk_ip4), msk, IP4_ADDR_STR_SIZE);
-    ip4addr_ntoa_r(&(config->lan.gw_ip4), gw, IP4_ADDR_STR_SIZE);
+        ip4addr_ntoa_r(&(config->lan.addr_ip4), addr, IP4_ADDR_STR_SIZE);
+        ip4addr_ntoa_r(&(config->lan.msk_ip4), msk, IP4_ADDR_STR_SIZE);
+        ip4addr_ntoa_r(&(config->lan.gw_ip4), gw, IP4_ADDR_STR_SIZE);
 
+        snprintf(*dest, MAX_INI_SIZE,
+            "[lan_ip4]\ntype=STATIC\nhostname=%s\naddress=%s\nmask=%s\ngateway=%s\n",
+            config->hostname, addr, msk, gw);
+    } else {
+        snprintf(*dest, MAX_INI_SIZE,
+            "[lan_ip4]\ntype=DHCP\nhostname=%s\n",
+            config->hostname);
+    }
+}
+
+void stringify_wifi_for_ini(ini_file_str_t *dest, ETH_config_t *config) {
+    if (IS_LAN_STATIC(config->lan.flag)) {
+        char addr[IP4_ADDR_STR_SIZE], msk[IP4_ADDR_STR_SIZE], gw[IP4_ADDR_STR_SIZE];
+
+        ip4addr_ntoa_r(&(config->lan.addr_ip4), addr, IP4_ADDR_STR_SIZE);
+        ip4addr_ntoa_r(&(config->lan.msk_ip4), msk, IP4_ADDR_STR_SIZE);
+        ip4addr_ntoa_r(&(config->lan.gw_ip4), gw, IP4_ADDR_STR_SIZE);
+
+        snprintf(*dest, MAX_INI_SIZE,
+            "[lan_ip4]\ntype=STATIC\nhostname=%s\naddress=%s\nmask=%s\ngateway=%s\n",
+            config->hostname, addr, msk, gw);
+    } else {
+        snprintf(*dest, MAX_INI_SIZE,
+            "[lan_ip4]\ntype=DHCP\nhostname=%s\n",
+            config->hostname);
+    }
     snprintf(*dest, MAX_INI_SIZE,
-        "[lan_ip4]\ntype=%s\nhostname=%s\naddress=%s\nmask=%s\ngateway=%s\n",
-        IS_LAN_STATIC(config->lan.flag) ? "STATIC" : "DHCP", config->hostname,
-        addr, msk, gw);
+        "[wifi_ap]\nssid=%s\npasswd=%s\n",
+        config->ssid, config->pks_password);
 }
 
 void stringify_eth_for_screen(lan_descp_str_t *dest, ETH_config_t *config) {
@@ -129,10 +155,28 @@ void stringify_eth_for_screen(lan_descp_str_t *dest, ETH_config_t *config) {
         ip4addr_ntoa_r(&(config->lan.msk_ip4), msk, IP4_ADDR_STR_SIZE);
         ip4addr_ntoa_r(&(config->lan.gw_ip4), gw, IP4_ADDR_STR_SIZE);
 
-        snprintf(*dest, LAN_DESCP_SIZE, "IPv4 Address:\n%s\nIPv4 Netmask:\n%s\nIPv4 Gateway:\n%s\nMAC Address:\n%s",
+        snprintf(*dest, LAN_DESCP_SIZE, "IP: %s\nnetmask: %s\ngateway: %s\nMAC: %s",
             addr, msk, gw, mac);
     } else {
-        snprintf(*dest, LAN_DESCP_SIZE, "NO CONNECTION\n\nMAC Address:\n%s", mac);
+        snprintf(*dest, LAN_DESCP_SIZE, "NO CONNECTION\n\nMAC Address: %s", mac);
+    }
+}
+
+void stringify_wifi_for_screen(lan_descp_str_t *dest, ETH_config_t *config) {
+    char addr[IP4_ADDR_STR_SIZE], msk[IP4_ADDR_STR_SIZE], gw[IP4_ADDR_STR_SIZE];
+    mac_address_t mac;
+    parse_MAC_address(&mac);
+
+    if (0) {
+
+        ip4addr_ntoa_r(&(config->lan.addr_ip4), addr, IP4_ADDR_STR_SIZE);
+        ip4addr_ntoa_r(&(config->lan.msk_ip4), msk, IP4_ADDR_STR_SIZE);
+        ip4addr_ntoa_r(&(config->lan.gw_ip4), gw, IP4_ADDR_STR_SIZE);
+
+        snprintf(*dest, LAN_DESCP_SIZE, "essid: %s\npasswd: %s\nIP: %s\nnetmask: %s\ngateway: %s\nMAC: %s",
+            config->ssid, config->pks_password, addr, msk, gw, mac);
+    } else {
+        snprintf(*dest, LAN_DESCP_SIZE, "NO CONNECTION\n\nMAC Address: %s", mac);
     }
 }
 
